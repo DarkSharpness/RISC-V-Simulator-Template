@@ -26,7 +26,7 @@ struct Bit {
   public:
     static constexpr std::size_t _Bit_Len = _Nm;
 
-    constexpr Bit(target_size_t data = 0) : _M_data(data) {}
+    constexpr Bit(target_size_t data = {}) : _M_data(data) {}
 
     template <std::size_t ..._Lens>
     constexpr Bit(Bit<_Lens> ...args) requires ((_Lens + ...) == _Nm) :
@@ -53,6 +53,16 @@ struct Bit {
     }
 
     constexpr operator target_size_t() const { return this->_M_data; }
+
+    template <std::size_t _Hi, std::size_t _Lo = _Hi>
+    constexpr auto set(Bit <_Hi - _Lo + 1> val) {
+        static_cast <void> (this->slice<_Hi, _Lo>());
+        const auto mask = // Mask those bit in the middle
+            (target_size_t(1) << (_Hi + 1)) - (target_size_t(1) << _Lo);
+        const auto data = // Set those bit in the middle
+            static_cast <target_size_t> (val) << _Lo;
+        this->_M_data = (this->_M_data & ~mask) | data;
+    }
 
     template <std::size_t _Hi, std::size_t _Lo = _Hi>
     constexpr auto slice() const -> Bit <_Hi - _Lo + 1> {

@@ -19,9 +19,7 @@ struct MyModule : Input, Output, private Content {
     using Tags = SyncTags <Input, Output, Content>;
     friend class Visitor;
 
-    void demo() {
-        this->d <= this->a + this->b;
-    }
+    void demo() { this->d <= this->a + this->b; }
 };
 
 signed main() {
