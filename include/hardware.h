@@ -127,6 +127,11 @@ struct Register {
   public:
     Register() : _M_new(), _M_old(), _M_dirty() {}
 
+    Register(Register &&) = delete;
+    Register(const Register &) = delete;
+    Register &operator=(Register &&) = delete;
+    Register &operator=(const Register &rhs) = delete;
+
     template <std::convertible_to <target_size_t> _Int>
     void operator <= (_Int &&value) {
         this->set_value(static_cast <target_size_t>(value));
