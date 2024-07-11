@@ -1,6 +1,8 @@
 #pragma once
 #include <utility>
+#ifdef _DEBUG
 #include <iostream>
+#endif
 #include <source_location>
 
 namespace dark::debug {

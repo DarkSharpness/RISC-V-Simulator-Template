@@ -1,9 +1,8 @@
 #pragma once
-#include "hardware.h"
 #include "reflect.h"
 #include <array>
 
-namespace dark::hardware {
+namespace dark {
 
 struct Visitor {
     template <typename _Tp>
