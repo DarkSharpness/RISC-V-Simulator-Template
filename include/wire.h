@@ -73,7 +73,7 @@ struct Wire {
     }
 
   public:
-    static constexpr bool _Bit_Len = _Len;
+    static constexpr std::size_t _Bit_Len = _Len;
 
     explicit Wire() :
         _M_func(new details::EmptyWire),

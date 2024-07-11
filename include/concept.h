@@ -34,7 +34,7 @@ concept explicit_convertible_to =
 &&   std::constructible_from <_To, _From>;
 
 template <typename _Tp>
-concept has_length = requires { _Tp::_Bit_Len; };
+concept has_length = requires { { +_Tp::_Bit_Len } -> std::same_as <std::size_t>; };
 
 template <typename _Tp>
 concept bit_type =  has_length <_Tp> && explicit_convertible_to <_Tp, max_size_t>;

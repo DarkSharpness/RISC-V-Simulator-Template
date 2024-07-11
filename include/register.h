@@ -26,7 +26,7 @@ struct Register {
     }
 
   public:
-    static constexpr bool _Bit_Len = _Len;
+    static constexpr std::size_t _Bit_Len = _Len;
 
     explicit Register() : _M_old(), _M_new(), _M_assigned() {}
 
