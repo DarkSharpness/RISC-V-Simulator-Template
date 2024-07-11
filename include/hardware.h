@@ -1,7 +1,8 @@
 #pragma once
 #include "debug.h"
-#include "target.h"
+#include "concept.h"
 #include <memory>
+#include <cstdint>
 #include <concepts>
 
 namespace dark::hardware {
@@ -13,7 +14,7 @@ struct Register;
 template <typename _Fn>
 concept WireFunction =
     !std::same_as <Wire, std::decay_t <_Fn>> &&
-    requires(_Fn &&__f) { { __f() } -> std::convertible_to <target_size_t>; };
+    requires(_Fn &&__f) { { __f() } -> std::convertible_to <max_size_t>; };
 
 struct WireBase {
     using _Ret_t = int;
@@ -46,7 +47,7 @@ struct Wire {
     using _Manage_t = WireBase;
 
     std::unique_ptr <_Manage_t>     _M_impl;
-    mutable target_size_t           _M_cache;
+    mutable max_size_t           _M_cache;
     mutable bool                    _M_holds;
 
     [[no_unique_address]]
@@ -65,7 +66,6 @@ struct Wire {
     }
 
   public:
-
     Wire() : _M_impl(new EmptyWire), _M_cache(), _M_holds(), _M_dirty() {}
 
     Wire(Wire &&) = delete;
@@ -90,7 +90,7 @@ struct Wire {
         this->_M_holds = false;
     }
 
-    operator target_size_t() const {
+    operator max_size_t() const {
         if (this->_M_holds == false) {
             this->_M_cache = this->_M_impl->call();
             this->_M_holds = true;
@@ -103,8 +103,8 @@ struct Register {
   private:
     friend struct Visitor;
 
-    target_size_t _M_new;
-    target_size_t _M_old;
+    max_size_t _M_new;
+    max_size_t _M_old;
 
     [[no_unique_address]]
     debug::DebugValue <bool, false> _M_dirty;
@@ -116,15 +116,16 @@ struct Register {
         }
     }
 
-    void set_value(target_size_t value) {
+    void set_value(max_size_t value) {
         this->_M_new = value;
         debug::assert(!this->_M_dirty, "Register is already assigned in this cycle.");
         this->_M_dirty = true;
     }
 
-    auto get_value() const -> target_size_t { return this->_M_old; }
+    auto get_value() const -> max_size_t { return this->_M_old; }
 
   public:
+
     Register() : _M_new(), _M_old(), _M_dirty() {}
 
     Register(Register &&) = delete;
@@ -132,12 +133,12 @@ struct Register {
     Register &operator=(Register &&) = delete;
     Register &operator=(const Register &rhs) = delete;
 
-    template <std::convertible_to <target_size_t> _Int>
+    template <std::convertible_to <max_size_t> _Int>
     void operator <= (_Int &&value) {
-        this->set_value(static_cast <target_size_t>(value));
+        this->set_value(static_cast <max_size_t>(value));
     }
 
-    operator target_size_t() const { return this->get_value(); }
+    operator max_size_t() const { return this->get_value(); }
 };
 
 } // namespace dark::hardware
