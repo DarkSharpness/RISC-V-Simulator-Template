@@ -8,12 +8,11 @@ namespace dark {
 namespace details {
 
 template <typename _Fn, std::size_t _Len>
-concept WireFunction = requires(_Fn &&func) {
-    { func() } -> concepts::bit_convertible <_Len>;
-};
+concept WireFunction =
+    concepts::bit_convertible <std::decay_t <std::invoke_result_t <_Fn>>, _Len>;
 
 struct FuncBase {
-    using _Ret_t = int;
+    using _Ret_t = max_size_t;
     using _Cpy_t = FuncBase *;
     virtual _Ret_t call() const = 0;
     virtual _Cpy_t copy() const = 0;
@@ -27,7 +26,7 @@ struct FuncImpl final : FuncBase {
     template <typename _Tp>
     FuncImpl(_Tp &&fn) : _M_lambda(std::forward <_Tp> (fn)) {}
 
-    _Ret_t call() const override { return this->_M_lambda(); }
+    _Ret_t call() const override { return static_cast <_Ret_t> (this->_M_lambda()); }
     _Cpy_t copy() const override { return new FuncImpl(*this); }
 };
 
