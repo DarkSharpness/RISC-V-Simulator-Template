@@ -28,7 +28,7 @@ struct Register {
   public:
     static constexpr std::size_t _Bit_Len = _Len;
 
-    explicit Register() : _M_old(), _M_new(), _M_assigned() {}
+    Register() : _M_old(), _M_new(), _M_assigned() {}
 
     Register(Register &&) = delete;
     Register(const Register &) = delete;

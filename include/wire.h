@@ -75,7 +75,7 @@ struct Wire {
   public:
     static constexpr std::size_t _Bit_Len = _Len;
 
-    explicit Wire() :
+    Wire() :
         _M_func(new details::EmptyWire),
         _M_cache(), _M_holds(), _M_assigned() {}
 
