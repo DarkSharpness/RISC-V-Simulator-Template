@@ -42,7 +42,9 @@ inline void sync_by_tag(_Tp &value, SyncTags<_Base...>) {
 
 template <typename _Tp>
 inline void sync_member(_Tp &value) {
-    if constexpr (is_std_array_v<_Tp>) {
+    if constexpr (std::is_const_v <_Tp>) {
+        /* Do nothing! Constant members need no synchronization! */
+    } else if constexpr (is_std_array_v<_Tp>) {
         for (auto &member : value) sync_member(member);
     } else if constexpr (Visitor::is_syncable_v<_Tp>) {
         Visitor::sync(value);
