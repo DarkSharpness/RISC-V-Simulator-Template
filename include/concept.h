@@ -1,4 +1,5 @@
 #pragma once
+#include <limits>
 #include <cstdint>
 #include <concepts>
 
