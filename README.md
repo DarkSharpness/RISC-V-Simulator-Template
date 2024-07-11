@@ -4,6 +4,12 @@ A template which enables you to write verilog-like C++ code.
 
 ## How to use
 
+### Requirements
+
+`g++-12` or later. `-std=c++20` or `-std=c++2b`.
+
+e.g. `g++ -std=c++2b ...`
+
 ### Include the library
 
 This is a header-only library, which means you just need to include all your required headers in your project.
@@ -91,6 +97,58 @@ Bit <1> e = d[0]; // Get the 0-th bit of d
 
 Bit f = { b + 3, c, d }; // Concatenate  b + 3, c, d  from  high to low
 
+```
+
+### Synchronization
+
+We support a feature of auto synchronization, which means that you can
+easily synchronize all the members of a class by simply calling the `sync_member` function.
+
+We support 4 types of synchronization:
+
+1. Register / Wire type synchronization.
+2. An array (only std::array is supported) of synchronizable objects.
+3. A class which contains only synchronizable objects, and satisfies std::is_aggregate.
+4. A class which has some basis which are synchronizable objects, and has a special tag.
+
+We will show some examples of 3 and 4.
+
+#### Example 1
+
+```cpp
+// An aggregate class, just a pure struct with some member functions.
+// No constructor! (That means, do not declare any constructor,
+// and the compiler will generate a default constructor for you)
+// See https://en.cppreference.com/w/cpp/language/aggregate_initialization
+// We support at most 14 members currently.
+struct case3 {
+    Register <3> rs1;
+    Register <3> rs2;
+    Register <3> rd;
+    Wire <3> rs1_data;
+    Wire <3> rs2_data;
+    Wire <3> rd_data;
+    std::array <Register <32>, 32> reg;
+};
+```
+
+#### Example 2
+
+```cpp
+struct some_private {
+    std::array <Register <16>, 3> private_reg;
+};
+
+struct case4 : private some_private, public case3 {
+    friend class Visitor;
+    using Tags = SyncTags <case3, some_private>;
+};
+
+// The synchronization function
+void demo() {
+    case4 c;
+    sync_member(c);
+}
 ```
 
 ## Deficiencies
