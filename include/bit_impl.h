@@ -42,7 +42,7 @@ constexpr Bit<_Nm>::Bit(const _Tp &...args)
     : _M_data(int_concat<_Tp::_Bit_Len...>(static_cast<max_size_t>(args)...)) {}
 
 template <std::size_t _Nm>
-template <concepts::bit_match <Bit <_Nm>> _Tp>
+template <concepts::bit_convertible <_Nm> _Tp>
 constexpr Bit<_Nm> &Bit<_Nm>::operator=(const _Tp &val) {
     this->_M_data = static_cast<max_size_t>(val);
     return *this;
@@ -56,17 +56,13 @@ constexpr void Bit<_Nm>::_M_range_check() {
 }
 
 template <std::size_t _Nm>
-template <std::size_t _Hi, std::size_t _Lo, concepts::bit_match <Bit<_Nm>> _Tp>
+template <std::size_t _Hi, std::size_t _Lo, concepts::bit_convertible <_Nm> _Tp>
 constexpr void Bit<_Nm>::set(const _Tp &val) {
     this->_M_range_check<_Hi, _Lo>();
     auto data = static_cast<max_size_t>(val);
     constexpr auto _Length = _Hi - _Lo + 1;
-    if constexpr (_Length == kMaxLength) {
-        this->_M_data = data;
-    } else {
-        auto mask = ((1 << _Length) - 1) << _Lo;
-        this->_M_data = (this->_M_data & ~mask) | ((data << _Lo) & mask);
-    }
+    auto mask = make_mask<_Length> << _Lo;
+    this->_M_data = (this->_M_data & ~mask) | ((data << _Lo) & mask);
 }
 
 template <std::size_t _Nm>
@@ -82,11 +78,7 @@ template <std::size_t _Len>
 constexpr auto Bit<_Nm>::slice(std::size_t pos) const -> Bit <_Len> {
     static_assert(_Len <= _Nm, "Bit::slice: _Len should be no greater than _Nm");
     debug::assert(pos <= _Nm - _Len, "Bit::slice: pos should be less than _Nm - _Len");
-    if constexpr (_Len == kMaxLength) {
-        return *this;
-    } else {
-        return Bit<_Len>(this->_M_data >> pos);
-    }
+    return Bit<_Len>(this->_M_data >> pos);
 }
 
 

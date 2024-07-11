@@ -7,8 +7,6 @@
 
 namespace dark {
 
-static constexpr std::size_t kMaxLength = std::numeric_limits<max_size_t>::digits;
-
 template <std::size_t _Nm>
 struct Bit {
   private:
@@ -31,10 +29,10 @@ struct Bit {
     requires ((_Tp::_Bit_Len + ...) == _Nm)
     constexpr Bit(const _Tp &...args);
 
-    template <concepts::bit_match <Bit> _Tp>
+    template <concepts::bit_convertible <_Nm> _Tp>
     constexpr Bit &operator=(const _Tp &val);
 
-    template <std::size_t _Hi, std::size_t _Lo = _Hi, concepts::bit_match <Bit> _Tp>
+    template <std::size_t _Hi, std::size_t _Lo = _Hi, concepts::bit_convertible <_Nm> _Tp>
     constexpr void set(const _Tp &val);
 
     template <std::size_t _Hi, std::size_t _Lo = _Hi>
