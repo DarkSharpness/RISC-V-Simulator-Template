@@ -1,5 +1,6 @@
 #pragma once
 #include "target.h"
+#include "debug.h"
 #include <version>
 #include <concepts>
 
@@ -70,6 +71,15 @@ struct Bit {
         static_assert(_Hi < _Nm, "Bit::slice: _Hi should be less than _Nm");
         return Bit<_Hi - _Lo + 1>(this->_M_data >> _Lo);
     }
+
+    template <std::size_t _Len = 1>
+    constexpr auto at(target_size_t pos) const -> Bit <_Len> {
+        static_assert(_Len != 0, "Bit::at: _Len should be greater than 0");
+        debug::assert(pos + _Len <= _Nm, "Bit::at: pos out of range");
+        return Bit <_Len> (this->_M_data >> pos);
+    }
+
+    constexpr auto operator [](target_size_t pos) const -> Bit <1> { return this->at(pos); }
 
     template <std::size_t _New = kMaxLength>
     constexpr auto zero_extend() const -> Bit<_New>;
