@@ -24,6 +24,7 @@ namespace dark::debug {
 
 template <typename _Tp, typename... _Args>
 struct assert {
+#ifdef _DEBUG
     explicit assert(_Tp &&condition, _Args &&...args,
         std::source_location location = std::source_location::current()) {
         if (condition) return;
@@ -35,6 +36,9 @@ struct assert {
         }
         std::exit(EXIT_FAILURE);
     }
+#else
+    explicit assert(_Tp &&, _Args &&...) {}
+#endif
 };
 
 template <typename _Tp, typename... _Args>
