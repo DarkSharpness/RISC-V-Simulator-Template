@@ -53,7 +53,7 @@ struct Wire {
 
     _Manage_t _M_func;
 
-    mutable max_size_t _M_cache;
+    mutable max_size_t _M_cache : _Len;
     mutable bool       _M_holds;
 
     [[no_unique_address]]
@@ -82,8 +82,7 @@ struct Wire {
     explicit operator max_size_t() const {
         if (this->_M_holds == false) {
             this->_M_holds = true;
-            constexpr auto mask = make_mask <_Len> ();
-            this->_M_cache = this->_M_func->call() & mask;
+            this->_M_cache = this->_M_func->call();
         }
         return this->_M_cache;
     }
