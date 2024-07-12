@@ -23,6 +23,7 @@ consteval auto get_common_length() -> std::size_t {
     }
 }
 
+
 template <typename _Tp, typename _Up>
 requires bit_match <_Tp, _Up>
 constexpr auto operator + (const _Tp &lhs, const _Up &rhs) {
@@ -34,42 +35,42 @@ template <typename _Tp, typename _Up>
 requires bit_match <_Tp, _Up>
 constexpr auto operator - (const _Tp &lhs, const _Up &rhs) {
     constexpr auto _Len = get_common_length <_Tp, _Up>();
-    return Bit <_Len> (cast(lhs) + cast(rhs));
+    return Bit <_Len> (cast(lhs) - cast(rhs));
 }
 
 template <typename _Tp, typename _Up>
 requires bit_match <_Tp, _Up>
 constexpr auto operator * (const _Tp &lhs, const _Up &rhs) {
     constexpr auto _Len = get_common_length <_Tp, _Up>();
-    return Bit <_Len> (cast(lhs) + cast(rhs));
+    return Bit <_Len> (cast(lhs) * cast(rhs));
 }
 
 template <typename _Tp, typename _Up>
 requires bit_match <_Tp, _Up>
 constexpr auto operator / (const _Tp &lhs, const _Up &rhs) {
     constexpr auto _Len = get_common_length <_Tp, _Up>();
-    return Bit <_Len> (cast(lhs) + cast(rhs));
+    return Bit <_Len> (cast(lhs) / cast(rhs));
 }
 
 template <typename _Tp, typename _Up>
 requires bit_match <_Tp, _Up>
 constexpr auto operator & (const _Tp &lhs, const _Up &rhs) {
     constexpr auto _Len = get_common_length <_Tp, _Up>();
-    return Bit <_Len> (cast(lhs) + cast(rhs));
+    return Bit <_Len> (cast(lhs) & cast(rhs));
 }
 
 template <typename _Tp, typename _Up>
 requires bit_match <_Tp, _Up>
 constexpr auto operator | (const _Tp &lhs, const _Up &rhs) {
     constexpr auto _Len = get_common_length <_Tp, _Up>();
-    return Bit <_Len> (cast(lhs) + cast(rhs));
+    return Bit <_Len> (cast(lhs) | cast(rhs));
 }
 
 template <typename _Tp, typename _Up>
 requires bit_match <_Tp, _Up>
 constexpr auto operator ^ (const _Tp &lhs, const _Up &rhs) {
     constexpr auto _Len = get_common_length <_Tp, _Up>();
-    return Bit <_Len> (cast(lhs) + cast(rhs));
+    return Bit <_Len> (cast(lhs) ^ cast(rhs));
 }
 
 template <typename _Tp>
@@ -104,5 +105,26 @@ template <bit_type _Tp>
 constexpr auto operator - (const _Tp &value) {
     return Bit <_Tp::_Bit_Len> (-cast(value));
 }
+
+template <int_or_bit _Tp, int_or_bit _Up>
+constexpr bool operator && (const _Tp &lhs, const _Up &rhs) {
+    return cast(lhs) && cast(rhs);
+}
+
+template <int_or_bit _Tp, int_or_bit _Up>
+constexpr bool operator || (const _Tp &lhs, const _Up &rhs) {
+    return cast(lhs) || cast(rhs);
+}
+
+template <int_or_bit _Tp, int_or_bit _Up>
+constexpr bool operator == (const _Tp &lhs, const _Up &rhs) {
+    return cast(lhs) == cast(rhs);
+}
+
+template <int_or_bit _Tp, int_or_bit _Up>
+constexpr auto operator <=> (const _Tp &lhs, const _Up &rhs) {
+    return cast(lhs) <=> cast(rhs);
+}
+
 
 } // namespace dark
