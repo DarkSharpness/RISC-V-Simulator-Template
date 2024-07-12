@@ -72,4 +72,37 @@ constexpr auto operator ^ (const _Tp &lhs, const _Up &rhs) {
     return Bit <_Len> (cast(lhs) + cast(rhs));
 }
 
+template <typename _Tp>
+concept int_or_bit = int_type <_Tp> || bit_type <_Tp>;
+
+template <bit_type _Tp, int_or_bit _Up>
+constexpr auto operator << (const _Tp &lhs, const _Up &rhs) {
+    return Bit <_Tp::_Bit_Len> (cast(lhs) << (cast(rhs) & kMaxLength));
+}
+
+template <bit_type _Tp, int_or_bit _Up>
+constexpr auto operator >> (const _Tp &lhs, const _Up &rhs) {
+    return Bit <_Tp::_Bit_Len> (cast(lhs) >> (cast(rhs) & kMaxLength));
+}
+
+template <bit_type _Tp>
+constexpr auto operator ~ (const _Tp &value) {
+    return Bit <_Tp::_Bit_Len> (~cast(value));
+}
+
+template <bit_type _Tp>
+constexpr auto operator ! (const _Tp &value) {
+    return ~value;
+}
+
+template <bit_type _Tp>
+constexpr auto operator + (const _Tp &value) {
+    return Bit <_Tp::_Bit_Len> (+cast(value));
+}
+
+template <bit_type _Tp>
+constexpr auto operator - (const _Tp &value) {
+    return Bit <_Tp::_Bit_Len> (-cast(value));
+}
+
 } // namespace dark
