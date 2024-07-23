@@ -19,10 +19,8 @@ struct Register {
     debug::DebugValue <bool, false> _M_assigned;
 
     void sync() {
-        if (this->_M_assigned) {
-            this->_M_assigned = false;
-            this->_M_old = this->_M_new;
-        }
+        this->_M_assigned = false;
+        this->_M_old = this->_M_new;
     }
 
   public:
