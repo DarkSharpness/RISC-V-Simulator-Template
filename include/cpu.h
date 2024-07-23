@@ -1,4 +1,6 @@
+#pragma once
 #include "module.h"
+#include <algorithm>
 #include <memory>
 #include <random>
 #include <vector>
@@ -7,7 +9,8 @@ namespace dark {
 
 class CPU {
 private:
-	std::vector<std::unique_ptr<ModuleBase>> modules;
+	std::vector<std::unique_ptr<ModuleBase>> mod_owned;
+	std::vector<ModuleBase *> modules;
 
 public:
 	unsigned long long cycles = 0;
@@ -19,9 +22,21 @@ private:
 	}
 
 public:
-	void add_module(std::unique_ptr<ModuleBase> module) {
-		modules.push_back(std::move(module));
+	/// @attention the pointer will be moved. you SHOULD NOT use it after calling this function.
+	template<typename _Tp>
+		requires std::derived_from<_Tp, ModuleBase>
+	void add_module(std::unique_ptr<_Tp> &module) {
+		modules.push_back(module.get());
+		mod_owned.emplace_back(std::move(module));
 	}
+	void add_module(std::unique_ptr<ModuleBase> module) {
+		modules.push_back(module.get());
+		mod_owned.emplace_back(std::move(module));
+	}
+	void add_module(ModuleBase *module) {
+		modules.push_back(module);
+	}
+
 	void run_once() {
 		++cycles;
 		for (auto &module: modules)
@@ -30,10 +45,7 @@ public:
 	}
 	void run_once_shuffle() {
 		static std::default_random_engine engine;
-		std::vector<ModuleBase *> shuffled;
-		shuffled.reserve(modules.size());
-		for (auto &module: modules)
-			shuffled.push_back(module.get());
+		std::vector<ModuleBase *> shuffled = modules;
 		std::shuffle(shuffled.begin(), shuffled.end(), engine);
 
 		++cycles;

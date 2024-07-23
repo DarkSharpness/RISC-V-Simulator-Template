@@ -107,6 +107,10 @@ public:
 		this->_M_func.reset(_M_new_func(std::forward<_Fn>(fn)));
 		this->sync();
 	}
+
+	explicit operator bool() const {
+		return static_cast<max_size_t>(*this);
+	}
 };
 
 

@@ -43,7 +43,9 @@ concept int_type = !has_length<_Tp> && implicit_convertible_to<_Tp, max_size_t>;
 
 template<typename _Lhs, typename _Rhs>
 concept bit_match =
-		(bit_type<_Lhs> && bit_type<_Rhs> && _Lhs::_Bit_Len == _Rhs::_Bit_Len) || (int_type<_Lhs> || int_type<_Rhs>);
+		(bit_type<_Lhs> && bit_type<_Rhs> && _Lhs::_Bit_Len == _Rhs::_Bit_Len) // prevent format
+		|| (int_type<_Lhs> && bit_type<_Rhs>)                                  //
+		|| (bit_type<_Lhs> && int_type<_Rhs>);
 
 template<typename _Tp, std::size_t _Len>
 concept bit_convertible =

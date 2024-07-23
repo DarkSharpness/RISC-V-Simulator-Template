@@ -41,6 +41,7 @@ public:
 	}
 
 	explicit operator max_size_t() const { return this->_M_old; }
+	explicit operator bool() const { return this->_M_old; }
 };
 
 } // namespace dark

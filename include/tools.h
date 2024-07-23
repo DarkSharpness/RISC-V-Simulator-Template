@@ -5,6 +5,8 @@
 #include "register.h"
 #include "synchronize.h"
 #include "wire.h"
+#include "module.h"
+#include "cpu.h"
 
 using dark::Bit;
 using dark::sign_extend;
