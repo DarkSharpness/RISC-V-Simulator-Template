@@ -16,4 +16,4 @@ struct Module : public ModuleBase, public _Tinput, public _Toutput, protected _T
 	}
 };
 
-}// namespace dark
+} // namespace dark

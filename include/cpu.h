@@ -48,4 +48,4 @@ public:
 	}
 };
 
-}// namespace dark
+} // namespace dark
