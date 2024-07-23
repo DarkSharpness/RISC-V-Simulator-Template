@@ -18,7 +18,7 @@ e.g. `g++ -std=c++2b ...`
 
 This is a header-only library, which means you just need to include all your required headers in your project.
 
-We strongly recommend you to include `include/tools` to simply include all the headers.
+We strongly recommend you to include `include/tools.h` to simply include all the headers.
 
 ```cpp
 #include "include/tools.h"

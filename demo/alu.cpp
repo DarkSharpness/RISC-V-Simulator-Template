@@ -1,4 +1,4 @@
-#include "../include/tools"
+#include "../include/tools.h"
 #include <iostream>
 
 bool reset;
