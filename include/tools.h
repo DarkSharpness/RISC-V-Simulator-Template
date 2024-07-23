@@ -29,5 +29,5 @@ constexpr auto to_unsigned(const _Tp &x) {
 
 template<dark::concepts::bit_type _Tp>
 constexpr auto to_signed(const _Tp &x) {
-	return static_cast<dark::max_ssize_t>(to_unsigned(x));
+	return static_cast<dark::max_ssize_t>(sign_extend(x));
 }
