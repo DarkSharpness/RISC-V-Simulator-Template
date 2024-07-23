@@ -10,9 +10,11 @@ which can (hope so) save you from writing a lot of duplicated code.
 
 ## Requirements
 
-`g++-12` or later. `-std=c++20` or `-std=c++2b`.
+`g++-12` or later, with flags `-std=c++20`.
 
-e.g. `g++ -std=c++2b ...`
+e.g. `g++ -std=c++20 ...`
+
+Your code may still run on `g++-11` or earlier, but we do not guarantee that.
 
 ## Include the library
 
@@ -28,11 +30,16 @@ We strongly recommend you to include `include/tools.h` to simply include all the
 
 We provide a debug mode, which will perform more checks in the code. To enable that,
 just define the macro `_DEBUG` before including the headers.
-You may also pass `-D _DEBUG` to the compiling command to define the macro.
+You may also pass `-D _DEBUG` to the compiler to define the macro,
+or just define it in your code.
 
 ```cpp
 #define _DEBUG
 ```
+
+We **strongly recommend** you to enable the debug mode when you are developing your project.
+
+e.g. `g++ -std=c++20 -D _DEBUG ...`
 
 ## Value types
 
