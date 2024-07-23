@@ -9,4 +9,4 @@ include_directories(include)
 
 add_executable(simulator ${sources})
 
-add_executable(demo demo/alu.cpp)
+add_executable(alu demo/alu.cpp)
