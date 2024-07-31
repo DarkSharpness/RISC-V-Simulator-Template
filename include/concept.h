@@ -16,6 +16,15 @@ consteval max_size_t make_mask() {
 	return _Len == kMaxLength ? ~max_size_t(0) : (max_size_t(1) << _Len) - 1;
 }
 
+template <std::size_t _Len>
+struct Wire;
+
+template <std::size_t _Len>
+struct Register;
+
+template <std::size_t _Len>
+struct Bit;
+
 } // namespace dark
 
 namespace dark::concepts {
@@ -50,5 +59,15 @@ concept bit_match =
 template<typename _Tp, std::size_t _Len>
 concept bit_convertible =
 		(bit_type<_Tp> && _Tp::_Bit_Len == _Len) || int_type<_Tp>;
+
+template <typename _Tp>
+inline constexpr bool is_reg_v = false;
+template <std::size_t _Len>
+inline constexpr bool is_reg_v<Register<_Len>> = true;
+
+template <typename _Tp>
+inline constexpr bool is_wire_v = false;
+template <std::size_t _Len>
+inline constexpr bool is_wire_v<Wire<_Len>> = true;
 
 } // namespace dark::concepts
