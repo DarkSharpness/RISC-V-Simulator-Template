@@ -8,6 +8,15 @@
 #include "module.h"
 #include "cpu.h"
 
+namespace dark {
+
+template <std::size_t _Len>
+auto Wire<_Len>::operator = (const Register <_Len> &reg) -> Wire &{
+	return this->assign([&]() -> auto & { return reg; }), *this;
+}
+
+} // namespace dark
+
 using dark::Bit;
 using dark::sign_extend;
 using dark::zero_extend;

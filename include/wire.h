@@ -101,6 +101,8 @@ public:
 		return this->assign(std::forward<_Fn>(fn)), *this;
 	}
 
+	Wire &operator=(const Register <_Len> &rhs);
+
 	template<details::WireFunction<_Len> _Fn>
 	void assign(_Fn &&fn) {
 		this->_M_checked_assign();
