@@ -1,6 +1,5 @@
 #pragma once
 #include "bit.h"
-#include "register.h"
 
 namespace dark {
 
@@ -76,7 +75,7 @@ constexpr auto operator^(const _Tp &lhs, const _Up &rhs) {
 }
 
 template<typename _Tp>
-concept int_or_bit = int_type<_Tp> || bit_type<std::decay_t<_Tp>>;
+concept int_or_bit = int_type<_Tp> || bit_type<_Tp>;
 
 template<bit_type _Tp, int_or_bit _Up>
 constexpr auto operator<<(const _Tp &lhs, const _Up &rhs) {
@@ -108,18 +107,14 @@ constexpr auto operator-(const _Tp &value) {
 	return Bit<_Tp::_Bit_Len>(-cast(value));
 }
 
-template<int_or_bit _Tp, int_or_bit _Up>
+template <typename _Tp, typename _Up>
+	requires bit_match<_Tp, _Up>
 constexpr bool operator==(const _Tp &lhs, const _Up &rhs) {
 	return cast(lhs) == cast(rhs);
 }
 
-template <typename _Tp>
-inline constexpr bool is_reg_ref_v = false;
-
-template <std::size_t _Len>
-inline constexpr bool is_reg_ref_v<Register<_Len> &> = true;
-
-template<int_or_bit _Tp, int_or_bit _Up>
+template <typename _Tp, typename _Up>
+	requires bit_match<_Tp, _Up>
 constexpr auto operator <=> (const _Tp &lhs, const _Up &rhs) {
 	return cast(lhs) <=> cast(rhs);
 }
