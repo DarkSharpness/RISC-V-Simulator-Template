@@ -37,6 +37,11 @@ namespace concepts {
 	template<typename _Tp, std::size_t _Nm>
 	static constexpr bool is_std_array_v<std::array<_Tp, _Nm>> = true;
 
+	template <typename _Tp>
+	inline constexpr std::size_t array_size_v = -1;
+	template <std::size_t _Size, typename _Tp>
+	inline constexpr std::size_t array_size_v <std::array <_Tp, _Size>> = _Size;
+
 } // namespace concepts
 
 namespace details {
