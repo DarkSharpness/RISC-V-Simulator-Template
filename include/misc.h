@@ -28,7 +28,8 @@ inline void connect(_Tp &lhs, _Vp &&rhs) {
 	if constexpr (!std::is_reference_v <_Vp>) {
 		static_assert(std::is_reference_v <_Vp>,
 			"RHS must be a reference, but not a right-value");
-	} else if constexpr (std::is_assignable_v <_Tp, _Up>) {
+	}
+	else if constexpr (std::is_assignable_v <_Tp, _Up>) {
 		lhs = rhs;
 	}
 	else if constexpr (concepts::is_std_array_v <_Tp>) {
