@@ -3,8 +3,8 @@
 
 namespace dark {
 
-template <typename _Tp, typename _Up>
-inline void connect(_Tp &lhs, _Up &rhs);
+template <typename _Tp, typename _Vp>
+inline void connect(_Tp &lhs, _Vp &&rhs);
 
 namespace details {
 
@@ -18,9 +18,17 @@ namespace details {
 
 } // namespace details
 
-template<typename _Tp, typename _Up>
-inline void connect(_Tp &lhs, _Up &rhs) {
-	if constexpr (std::is_assignable_v <_Tp, _Up>) {
+/**
+ * @brief Connects two objects.
+ * Note that both should have the same structure.
+ */
+template<typename _Tp, typename _Vp>
+inline void connect(_Tp &lhs, _Vp &&rhs) {
+	using _Up = std::remove_cvref_t <_Vp>;
+	if constexpr (!std::is_reference_v <_Vp>) {
+		static_assert(std::is_reference_v <_Vp>,
+			"RHS must be a reference, but not a right-value");
+	} else if constexpr (std::is_assignable_v <_Tp, _Up>) {
 		lhs = rhs;
 	}
 	else if constexpr (concepts::is_std_array_v <_Tp>) {
@@ -36,6 +44,7 @@ inline void connect(_Tp &lhs, _Up &rhs) {
 	else if constexpr (std::is_aggregate_v <_Tp>) {
 		static_assert(std::is_aggregate_v<_Up>,
 			"Both types must be aggregate.");
+
 		auto lhs_tuple = reflect::tuplify(lhs);
 		auto rhs_tuple = reflect::tuplify(rhs);
 
